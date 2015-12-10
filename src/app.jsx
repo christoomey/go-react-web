@@ -16,12 +16,19 @@ let initialBoard = [
   [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
 ];
 
-const buildGame = ({ currentPlayer, board }, pending = false) => {
+const nonPendingBoard = (board) => {
+  return board.map(row => {
+      return row.map(stone => {
+        return { pending: false, stone: stone }
+      });
+  });
+}
+
+const buildGame = ({ currentPlayer, board }) => {
   return {
     player: BLACK,
-    pending: pending,
     currentPlayer: currentPlayer,
-    board: board,
+    board: nonPendingBoard(board),
   };
 }
 
@@ -32,7 +39,7 @@ const initialGame = buildGame({
 
 const optimisticallyPlace = (game, { rowIndex, cellIndex }) => {
   if (game.player === game.currentPlayer) {
-    game.board[rowIndex][cellIndex] = game.player;
+    game.board[rowIndex][cellIndex] = { pending: true, stone: game.player };
     game.currentPlayer = (game.currentPlayer === WHITE) ? BLACK : WHITE;
   }
   return game.board;
@@ -85,7 +92,7 @@ var App = React.createClass({
 var Board = React.createClass({
   render: function() {
     return (
-      <div className={`board ${this.props.pending ? 'pending' : ''}`}>
+      <div className='board'>
         {this.props.board.map((row, rowIndex) =>
           <Row key={rowIndex} stones={row} onStonePlaced={this.props.stonePlaced(rowIndex)} />
         )}
@@ -110,7 +117,7 @@ var Cell = React.createClass({
   render: function() {
     return (
       <div className="cell" onClick={this.props.onStonePlaced} >
-        <Stone type={this.props.stone} />
+        <Stone stone={this.props.stone.stone} pending={this.props.stone.pending} />
       </div>
     )
   }
@@ -118,7 +125,8 @@ var Cell = React.createClass({
 
 var Stone = React.createClass({
   render: function() {
-    return <div className={`stone ${this.props.type.toLowerCase()}`}></div>
+    const { pending, stone } = this.props;
+    return <div className={`stone ${stone.toLowerCase()} ${pending ? 'pending' : ''}`}></div>
   }
 });
 

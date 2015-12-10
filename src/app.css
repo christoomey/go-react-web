@@ -3,10 +3,6 @@
   flex-direction: column;
 }
 
-.board.pending {
-  opacity: 0.25;
-}
-
 .row {
   display: flex;
 }
@@ -36,6 +32,10 @@
 
 .stone.empty {
   border: none;
+}
+
+.stone.pending {
+  opacity: 0.75;
 }
 
 .cell {
