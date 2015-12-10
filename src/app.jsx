@@ -2,12 +2,24 @@ const WHITE = 'WHITE';
 const BLACK = 'BLACK';
 const EMPTY = 'EMPTY';
 
+let initialBoard = [
+  [WHITE, BLACK, WHITE, EMPTY, BLACK, WHITE, BLACK, EMPTY, WHITE],
+  [WHITE, BLACK, WHITE, EMPTY, BLACK, WHITE, BLACK, EMPTY, WHITE],
+  [WHITE, BLACK, WHITE, EMPTY, BLACK, WHITE, BLACK, EMPTY, WHITE],
+  [WHITE, BLACK, WHITE, EMPTY, BLACK, WHITE, BLACK, EMPTY, WHITE],
+  [WHITE, BLACK, WHITE, EMPTY, BLACK, WHITE, BLACK, EMPTY, WHITE],
+  [WHITE, BLACK, WHITE, EMPTY, BLACK, WHITE, BLACK, EMPTY, WHITE],
+  [WHITE, BLACK, WHITE, EMPTY, BLACK, WHITE, BLACK, EMPTY, WHITE],
+  [WHITE, BLACK, WHITE, EMPTY, BLACK, WHITE, BLACK, EMPTY, WHITE],
+  [WHITE, BLACK, WHITE, EMPTY, BLACK, WHITE, BLACK, EMPTY, WHITE],
+];
+
 var Board = React.createClass({
   render: function() {
     return (
       <table>
         <tbody>
-          <Row stones={[WHITE, BLACK, EMPTY, WHITE, BLACK]} />
+          {initialBoard.map(row => <Row stones={row} />)}
         </tbody>
       </table>
     );
@@ -16,7 +28,6 @@ var Board = React.createClass({
 
 var Row = React.createClass({
   render: function() {
-    debugger
     return (
       <tr className="row">
         {this.props.stones.map(stone =>
