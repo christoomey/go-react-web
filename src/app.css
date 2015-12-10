@@ -1,0 +1,32 @@
+.board {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+}
+
+.cell {
+  width: 20px;
+  height: 20px;
+  border: 1px solid #777;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stone {
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.stone.white {
+  background-color: white;
+}
+
+.stone.black {
+  background-color: black;
+}

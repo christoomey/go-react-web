@@ -18,7 +18,7 @@ var Board = React.createClass({
   render: function() {
     return (
       <div className="board">
-        {initialBoard.map(row => <Row stones={row} />)}
+        {initialBoard.map((row, i) => <Row key={i} stones={row} />)}
       </div>
     );
   }
@@ -28,8 +28,8 @@ var Row = React.createClass({
   render: function() {
     return (
       <div className="row">
-        {this.props.stones.map(stone =>
-          <Cell stone={stone} />
+        {this.props.stones.map((stone, i) =>
+          <Cell key={i} stone={stone} />
         )}
       </div>
     )
@@ -48,7 +48,7 @@ var Cell = React.createClass({
 
 var Stone = React.createClass({
   render: function() {
-    return <span className={`stone ${this.props.type.toLowerCase()}`}></span>
+    return <div className={`stone ${this.props.type.toLowerCase()}`}></div>
   }
 });
 
