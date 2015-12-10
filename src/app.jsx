@@ -1,11 +1,13 @@
+// import { Router, Route, IndexRoute, Link } from 'react-router';
+
 const WHITE = 'WHITE';
 const BLACK = 'BLACK';
 const EMPTY = 'EMPTY';
 
 const STONE_PLACED = 'STONE_PLACED';
 
-const SERVER = "http://5eb530ce.ngrok.com/"
-const gameId = 4;
+const SERVER = "http://5eb530ce.ngrok.com"
+const gameId = 5;
 
 let initialBoard = [
   [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
@@ -76,18 +78,33 @@ var App = React.createClass({
             { method: "POST", body: JSON.stringify(action) }
           );
 
-          gameResponded.then(resp => resp.json()).then(response => {
-            var nextGame = buildGame(response.game, false);
-            this.setState(nextGame);
-          })
+          gameResponded.then(resp => {
+            resp.json().then(gameState => {
+              const nextGame = buildGame(gameState.game);
+
+              if (resp.ok) {
+                this.setState(nextGame);
+              } else {
+                this.setState({ ...nextGame, error: gameState.error });
+              };
+            })
+          });
         }
       };
     };
+  },
+  errorDisplay: function() {
+    const { error } = this.state;
+
+    if (error) {
+      return <p>Error: {error}</p>
+    }
   },
   render: function() {
     return (
       <div className="app">
         <p>Current Player is {this.state.currentPlayer}</p>
+        {this.errorDisplay()}
         <Board stonePlaced={this.stonePlaced} board={this.state.board} pending={this.state.pending} />
       </div>
     )
@@ -148,7 +165,3 @@ ReactDOM.render(
   <App />,
   document.getElementById('container')
 );
-
-// set nocindent
-// setl autoindent
-// setl indentexpr=''
