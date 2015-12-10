@@ -1,4 +1,4 @@
-// import { Router, Route, IndexRoute, Link } from 'react-router';
+const { Router, Route, IndexRoute, Link } = ReactRouter;
 
 const WHITE = 'WHITE';
 const BLACK = 'BLACK';
@@ -9,17 +9,13 @@ const STONE_PLACED = 'STONE_PLACED';
 const SERVER = "http://5eb530ce.ngrok.com"
 const gameId = 5;
 
-let initialBoard = [
-  [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
-  [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
-  [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
-  [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
-  [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
-  [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
-  [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
-  [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
-  [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
-];
+let router = (
+  <Router>
+    <Route path="/" component={Wrapper}>
+      <Route path="*" component={RootComp} />
+    </Route>
+  </Router>
+);
 
 const nonPendingBoard = (board) => {
   return board.map(row => {
@@ -46,8 +42,10 @@ const optimisticallyPlace = (game, { rowIndex, cellIndex }) => {
   return game.board;
 };
 
-var App = React.createClass({
+var Game = React.createClass({
   getInitialState: function() {
+    console.log("helo");
+    const { gameId } = this.props;
     let gameResponded = fetch(`${SERVER}/games/${gameId}`)
     gameResponded.then(resp => resp.json()).then(response => {
       var nextGame = buildGame(response.game, false);
@@ -161,7 +159,29 @@ var Stone = React.createClass({
   }
 });
 
+let RootComp = React.createClass({
+  render: function() {
+    return (
+      <div>
+        <h1>sldkfj</h1>;
+        {this.props.children}
+      </div>
+    )
+  }
+});
+
+let Wrapper = React.createClass({
+  render: function() {
+    return (
+      <div>
+        <p>Wrapper</p>
+        {this.props.children}
+      </div>
+    )
+  }
+});
+
 ReactDOM.render(
-  <App />,
+  router,
   document.getElementById('container')
 );
