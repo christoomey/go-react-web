@@ -2,6 +2,8 @@ const WHITE = 'WHITE';
 const BLACK = 'BLACK';
 const EMPTY = 'EMPTY';
 
+const STONE_PLACED = 'STONE_PLACED';
+
 let initialBoard = [
   [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
   [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
@@ -16,32 +18,45 @@ let initialBoard = [
 
 let game = {
   player: BLACK,
+  currentPlayer: BLACK,
   board: initialBoard,
 }
 
 const nextState = (game, action) => {
-  if (action.type === "StonePlaced") {
+  if (action.type === STONE_PLACED) {
     game.board[action.rowIndex][action.cellIndex] = game.player;
+    game.currentPlayer = (game.currentPlayer === WHITE) ? BLACK : WHITE;
   }
   return game;
 }
 
-var Board = React.createClass({
+var App = React.createClass({
   getInitialState: function() {
     return this.props.game;
   },
   stonePlaced: function(rowIndex) {
     return (cellIndex) => {
       return () => {
-        this.setState(nextState(game, { type: "StonePlaced", rowIndex: rowIndex, cellIndex: cellIndex }))
+        this.setState(nextState(game, { type: STONE_PLACED, rowIndex: rowIndex, cellIndex: cellIndex }))
       };
     };
   },
   render: function() {
     return (
+      <div className="app">
+        <p>Current Player is {this.state.currentPlayer}</p>
+        <Board stonePlaced={this.stonePlaced} board={this.state.board} />
+      </div>
+    )
+  }
+});
+
+var Board = React.createClass({
+  render: function() {
+    return (
       <div className="board">
-        {initialBoard.map((row, rowIndex) =>
-          <Row key={rowIndex} stones={row} onStonePlaced={this.stonePlaced(rowIndex)} />
+        {this.props.board.map((row, rowIndex) =>
+          <Row key={rowIndex} stones={row} onStonePlaced={this.props.stonePlaced(rowIndex)} />
         )}
       </div>
     );
@@ -77,7 +92,7 @@ var Stone = React.createClass({
 });
 
 ReactDOM.render(
-  <Board game={game} />,
+  <App game={game} />,
   document.getElementById('container')
 );
 
