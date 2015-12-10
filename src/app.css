@@ -30,3 +30,7 @@
 .stone.black {
   background-color: black;
 }
+
+.stone.empty {
+  border: none;
+}
