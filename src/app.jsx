@@ -4,6 +4,9 @@ const EMPTY = 'EMPTY';
 
 const STONE_PLACED = 'STONE_PLACED';
 
+const SERVER = "http://5eb530ce.ngrok.com/"
+const gameId = 4;
+
 let initialBoard = [
   [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
   [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
@@ -24,18 +27,14 @@ const nonPendingBoard = (board) => {
   });
 }
 
-const buildGame = ({ currentPlayer, board }) => {
+const buildGame = ({ currentPlayer, board }, pending = false) => {
   return {
+    pending: pending,
     player: BLACK,
     currentPlayer: currentPlayer,
     board: nonPendingBoard(board),
   };
 }
-
-const initialGame = buildGame({
-  currentPlayer: BLACK,
-  board: initialBoard
-});
 
 const optimisticallyPlace = (game, { rowIndex, cellIndex }) => {
   if (game.player === game.currentPlayer) {
@@ -47,13 +46,19 @@ const optimisticallyPlace = (game, { rowIndex, cellIndex }) => {
 
 var App = React.createClass({
   getInitialState: function() {
-    return this.props.game;
+    let gameResponded = fetch(`${SERVER}/games/${gameId}`)
+    gameResponded.then(resp => resp.json()).then(response => {
+      var nextGame = buildGame(response.game, false);
+      this.setState(nextGame);
+    });
+
+    return { pending: true };
   },
   stonePlaced: function(rowIndex) {
     return (cellIndex) => {
       return () => {
         if (!this.state.pending) {
-          const actionsEndpoint = "http://5eb530ce.ngrok.com/games/4/actions";
+          const actionsEndpoint = `${SERVER}/games/${gameId}/actions`;
           const action = {
             type: STONE_PLACED,
             rowIndex: rowIndex,
@@ -64,7 +69,7 @@ var App = React.createClass({
           const game = this.state;
           const optimisticBoard = optimisticallyPlace(game, action);
 
-          this.setState({ ...game, board: optimisticBoard, pending: true });
+          this.setState({ ...game, board: optimisticBoard });
 
           let gameResponded = fetch(
             actionsEndpoint,
@@ -90,12 +95,21 @@ var App = React.createClass({
 });
 
 var Board = React.createClass({
+  boardOrPending: function() {
+    if (this.props.pending) {
+      return <p>Waiting for game data</p>
+    } else {
+      return (
+        this.props.board.map((row, rowIndex) =>
+          <Row key={rowIndex} stones={row} onStonePlaced={this.props.stonePlaced(rowIndex)} />
+        )
+      )
+    }
+  },
   render: function() {
     return (
       <div className='board'>
-        {this.props.board.map((row, rowIndex) =>
-          <Row key={rowIndex} stones={row} onStonePlaced={this.props.stonePlaced(rowIndex)} />
-        )}
+        {this.boardOrPending()}
       </div>
     );
   }
@@ -131,7 +145,7 @@ var Stone = React.createClass({
 });
 
 ReactDOM.render(
-  <App game={initialGame} />,
+  <App />,
   document.getElementById('container')
 );
 
