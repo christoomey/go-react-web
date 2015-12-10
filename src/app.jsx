@@ -16,21 +16,20 @@ let initialBoard = [
   [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
 ];
 
-let game = {
-  player: BLACK,
-  currentPlayer: BLACK,
-  board: initialBoard,
+// let game = {
+//   player: BLACK,
+//   currentPlayer: BLACK,
+//   board: initialBoard,
+// }
+
+const buildGame = (remoteGameState) => {
+  return { player: BLACK, ...remoteGameState };
 }
 
-const nextState = (game, action) => {
-  if (action.type === STONE_PLACED) {
-    if (game.player === game.currentPlayer) {
-      game.board[action.rowIndex][action.cellIndex] = game.player;
-      game.currentPlayer = (game.currentPlayer === WHITE) ? BLACK : WHITE;
-    }
-  }
-  return game;
-}
+const initialGame = buildGame({
+  currentPlayer: BLACK,
+  board: initialBoard
+});
 
 var App = React.createClass({
   getInitialState: function() {
@@ -39,7 +38,18 @@ var App = React.createClass({
   stonePlaced: function(rowIndex) {
     return (cellIndex) => {
       return () => {
-        this.setState(nextState(game, { type: STONE_PLACED, rowIndex: rowIndex, cellIndex: cellIndex }))
+        const actionsEndpoint = "http://5eb530ce.ngrok.com/games/123/actions";
+        const action = { type: STONE_PLACED, rowIndex: rowIndex, cellIndex: cellIndex };
+
+        let gameResponded = fetch(
+          actionsEndpoint,
+          { method: "POST", body: JSON.stringify(action) }
+        );
+
+        gameResponded.then(resp => resp.json()).then(response => {
+          var nextGame = buildGame(response.game);
+          this.setState(nextGame);
+        })
       };
     };
   },
@@ -94,7 +104,7 @@ var Stone = React.createClass({
 });
 
 ReactDOM.render(
-  <App game={game} />,
+  <App game={initialGame} />,
   document.getElementById('container')
 );
 
