@@ -24,8 +24,10 @@ let game = {
 
 const nextState = (game, action) => {
   if (action.type === STONE_PLACED) {
-    game.board[action.rowIndex][action.cellIndex] = game.player;
-    game.currentPlayer = (game.currentPlayer === WHITE) ? BLACK : WHITE;
+    if (game.player === game.currentPlayer) {
+      game.board[action.rowIndex][action.cellIndex] = game.player;
+      game.currentPlayer = (game.currentPlayer === WHITE) ? BLACK : WHITE;
+    }
   }
   return game;
 }
