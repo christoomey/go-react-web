@@ -10,7 +10,6 @@
 .cell {
   width: 20px;
   height: 20px;
-  border: 1px solid #777;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -19,8 +18,8 @@
 .stone {
   width: 10px;
   height: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+  border-radius: 6px;
+  border: 1px solid black;
 }
 
 .stone.white {
@@ -33,4 +32,48 @@
 
 .stone.empty {
   border: none;
+}
+
+.cell {
+  background-image: url(images/middle.png);
+  background-size: contain;
+}
+
+.row:first-child .cell {
+  background-image: url(images/edge.png);
+}
+
+.row:last-child .cell {
+  background-image: url(images/edge.png);
+  transform: rotate(180deg);
+}
+
+.cell:first-child {
+  background-image: url(images/edge.png);
+  transform: rotate(270deg);
+}
+
+.cell:last-child {
+  background-image: url(images/edge.png);
+  transform: rotate(90deg);
+}
+
+.row:first-child .cell:first-child {
+  background-image: url(images/corner.png);
+  transform: rotate(0deg);
+}
+
+.row:first-child .cell:last-child {
+  background-image: url(images/corner.png);
+  transform: rotate(90deg);
+}
+
+.row:last-child .cell:first-child {
+  background-image: url(images/corner.png);
+  transform: rotate(270deg);
+}
+
+.row:last-child .cell:last-child {
+  background-image: url(images/corner.png);
+  transform: rotate(180deg);
 }
