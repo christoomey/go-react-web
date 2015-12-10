@@ -5,15 +5,15 @@ const EMPTY = 'EMPTY';
 const STONE_PLACED = 'STONE_PLACED';
 
 let initialBoard = [
-  [WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE],
-  [WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE],
-  [WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE],
-  [WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE],
-  [WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE],
-  [WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE],
-  [WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE],
-  [WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE],
-  [WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE],
+  [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+  [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+  [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+  [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+  [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+  [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+  [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+  [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+  [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
 ];
 
 const buildGame = ({ currentPlayer, board }, pending = false) => {
@@ -30,6 +30,14 @@ const initialGame = buildGame({
   board: initialBoard
 });
 
+const optimisticallyPlace = (game, { rowIndex, cellIndex }) => {
+  if (game.player === game.currentPlayer) {
+    game.board[rowIndex][cellIndex] = game.player;
+    game.currentPlayer = (game.currentPlayer === WHITE) ? BLACK : WHITE;
+  }
+  return game.board;
+};
+
 var App = React.createClass({
   getInitialState: function() {
     return this.props.game;
@@ -37,21 +45,30 @@ var App = React.createClass({
   stonePlaced: function(rowIndex) {
     return (cellIndex) => {
       return () => {
-        const actionsEndpoint = "http://5eb530ce.ngrok.com/games/4/actions";
-        const action = { type: STONE_PLACED, rowIndex: rowIndex, cellIndex: cellIndex };
+        if (!this.state.pending) {
+          const actionsEndpoint = "http://5eb530ce.ngrok.com/games/4/actions";
+          const action = {
+            type: STONE_PLACED,
+            rowIndex: rowIndex,
+            cellIndex: cellIndex,
+            player: this.state.player
+          };
 
-        const game = this.state;
-        this.setState({ ...game, pending: true });
+          const game = this.state;
+          const optimisticBoard = optimisticallyPlace(game, action);
 
-        let gameResponded = fetch(
-          actionsEndpoint,
-          { method: "POST", body: JSON.stringify(action) }
-        );
+          this.setState({ ...game, board: optimisticBoard, pending: true });
 
-        gameResponded.then(resp => resp.json()).then(response => {
-          var nextGame = buildGame(response.game, false);
-          this.setState(nextGame);
-        })
+          let gameResponded = fetch(
+            actionsEndpoint,
+            { method: "POST", body: JSON.stringify(action) }
+          );
+
+          gameResponded.then(resp => resp.json()).then(response => {
+            var nextGame = buildGame(response.game, false);
+            this.setState(nextGame);
+          })
+        }
       };
     };
   },
