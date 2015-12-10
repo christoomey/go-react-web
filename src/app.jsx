@@ -5,25 +5,24 @@ const EMPTY = 'EMPTY';
 const STONE_PLACED = 'STONE_PLACED';
 
 let initialBoard = [
-  [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
-  [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
-  [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
-  [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
-  [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
-  [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
-  [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
-  [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
-  [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+  [WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE],
+  [WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE],
+  [WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE],
+  [WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE],
+  [WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE],
+  [WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE],
+  [WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE],
+  [WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE],
+  [WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE],
 ];
 
-// let game = {
-//   player: BLACK,
-//   currentPlayer: BLACK,
-//   board: initialBoard,
-// }
-
-const buildGame = (remoteGameState) => {
-  return { player: BLACK, ...remoteGameState };
+const buildGame = ({ currentPlayer, board }, pending = false) => {
+  return {
+    player: BLACK,
+    pending: pending,
+    currentPlayer: currentPlayer,
+    board: board,
+  };
 }
 
 const initialGame = buildGame({
@@ -38,8 +37,11 @@ var App = React.createClass({
   stonePlaced: function(rowIndex) {
     return (cellIndex) => {
       return () => {
-        const actionsEndpoint = "http://5eb530ce.ngrok.com/games/123/actions";
+        const actionsEndpoint = "http://5eb530ce.ngrok.com/games/4/actions";
         const action = { type: STONE_PLACED, rowIndex: rowIndex, cellIndex: cellIndex };
+
+        const game = this.state;
+        this.setState({ ...game, pending: true });
 
         let gameResponded = fetch(
           actionsEndpoint,
@@ -47,7 +49,7 @@ var App = React.createClass({
         );
 
         gameResponded.then(resp => resp.json()).then(response => {
-          var nextGame = buildGame(response.game);
+          var nextGame = buildGame(response.game, false);
           this.setState(nextGame);
         })
       };
@@ -57,7 +59,7 @@ var App = React.createClass({
     return (
       <div className="app">
         <p>Current Player is {this.state.currentPlayer}</p>
-        <Board stonePlaced={this.stonePlaced} board={this.state.board} />
+        <Board stonePlaced={this.stonePlaced} board={this.state.board} pending={this.state.pending} />
       </div>
     )
   }
@@ -66,7 +68,7 @@ var App = React.createClass({
 var Board = React.createClass({
   render: function() {
     return (
-      <div className="board">
+      <div className={`board ${this.props.pending ? 'pending' : ''}`}>
         {this.props.board.map((row, rowIndex) =>
           <Row key={rowIndex} stones={row} onStonePlaced={this.props.stonePlaced(rowIndex)} />
         )}
@@ -78,7 +80,7 @@ var Board = React.createClass({
 var Row = React.createClass({
   render: function() {
     return (
-      <div className="row">
+      <div className='row'>
         {this.props.stones.map((stone, cellIndex) =>
           <Cell key={cellIndex} stone={stone} onStonePlaced={this.props.onStonePlaced(cellIndex)} />
         )}

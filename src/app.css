@@ -3,6 +3,10 @@
   flex-direction: column;
 }
 
+.board.pending {
+  opacity: 0.25;
+}
+
 .row {
   display: flex;
 }
