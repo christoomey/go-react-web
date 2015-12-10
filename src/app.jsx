@@ -1,19 +1,46 @@
-var ExampleApplication = React.createClass({
-  render: function() {
-    var elapsed = Math.round(this.props.elapsed  / 100);
-    var seconds = elapsed / 10 + (elapsed % 10 ? '' : '.0' );
-    var message =
-      'React has been successfully running for ' + seconds + ' seconds.';
+const WHITE = 'WHITE';
+const BLACK = 'BLACK';
+const EMPTY = 'EMPTY';
 
-    return <p>{message}</p>;
+var Board = React.createClass({
+  render: function() {
+    return (
+      <table>
+        <tbody>
+          <Row stones={[WHITE, BLACK, EMPTY, WHITE, BLACK]} />
+        </tbody>
+      </table>
+    );
   }
 });
 
-var start = new Date().getTime();
+var Row = React.createClass({
+  render: function() {
+    debugger
+    return (
+      <tr className="row">
+        {this.props.stones.map(stone =>
+          <Cell stone={stone} />
+        )}
+      </tr>
+    )
+  }
+});
 
-setInterval(function() {
-  ReactDOM.render(
-    <ExampleApplication elapsed={new Date().getTime() - start} />,
-    document.getElementById('container')
-  );
-}, 50);
+var Cell = React.createClass({
+  render: function() {
+    return (
+      <td className="cell">
+        {this.props.stone}
+      </td>
+    )
+  }
+});
+
+ReactDOM.render(
+  <Board />,
+  document.getElementById('container')
+);
+
+// set nocindent
+// setl autoindent
