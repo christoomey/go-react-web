@@ -17,11 +17,9 @@ let initialBoard = [
 var Board = React.createClass({
   render: function() {
     return (
-      <table>
-        <tbody>
-          {initialBoard.map(row => <Row stones={row} />)}
-        </tbody>
-      </table>
+      <div className="board">
+        {initialBoard.map(row => <Row stones={row} />)}
+      </div>
     );
   }
 });
@@ -29,11 +27,11 @@ var Board = React.createClass({
 var Row = React.createClass({
   render: function() {
     return (
-      <tr className="row">
+      <div className="row">
         {this.props.stones.map(stone =>
           <Cell stone={stone} />
         )}
-      </tr>
+      </div>
     )
   }
 });
@@ -41,10 +39,16 @@ var Row = React.createClass({
 var Cell = React.createClass({
   render: function() {
     return (
-      <td className="cell">
-        {this.props.stone}
-      </td>
+      <div className="cell">
+        <Stone type={this.props.stone} />
+      </div>
     )
+  }
+});
+
+var Stone = React.createClass({
+  render: function() {
+    return <span className={`stone ${this.props.type.toLowerCase()}`}></span>
   }
 });
 
@@ -55,3 +59,4 @@ ReactDOM.render(
 
 // set nocindent
 // setl autoindent
+// setl indentexpr=''
