@@ -3,22 +3,46 @@ const BLACK = 'BLACK';
 const EMPTY = 'EMPTY';
 
 let initialBoard = [
-  [EMPTY, BLACK, WHITE, EMPTY, BLACK, WHITE, BLACK, EMPTY, WHITE],
-  [WHITE, BLACK, WHITE, EMPTY, BLACK, WHITE, BLACK, EMPTY, WHITE],
-  [WHITE, BLACK, WHITE, EMPTY, BLACK, WHITE, BLACK, EMPTY, WHITE],
-  [WHITE, BLACK, WHITE, EMPTY, BLACK, WHITE, BLACK, EMPTY, WHITE],
-  [WHITE, BLACK, WHITE, EMPTY, BLACK, WHITE, BLACK, EMPTY, WHITE],
-  [WHITE, BLACK, WHITE, EMPTY, BLACK, WHITE, BLACK, EMPTY, WHITE],
-  [WHITE, BLACK, WHITE, EMPTY, BLACK, WHITE, BLACK, EMPTY, WHITE],
-  [WHITE, BLACK, WHITE, EMPTY, BLACK, WHITE, BLACK, EMPTY, WHITE],
-  [WHITE, BLACK, WHITE, EMPTY, BLACK, WHITE, BLACK, EMPTY, WHITE],
+  [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+  [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+  [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+  [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+  [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+  [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+  [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+  [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+  [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
 ];
 
+let game = {
+  player: BLACK,
+  board: initialBoard,
+}
+
+const nextState = (game, action) => {
+  if (action.type === "StonePlaced") {
+    game.board[action.rowIndex][action.cellIndex] = game.player;
+  }
+  return game;
+}
+
 var Board = React.createClass({
+  getInitialState: function() {
+    return this.props.game;
+  },
+  stonePlaced: function(rowIndex) {
+    return (cellIndex) => {
+      return () => {
+        this.setState(nextState(game, { type: "StonePlaced", rowIndex: rowIndex, cellIndex: cellIndex }))
+      };
+    };
+  },
   render: function() {
     return (
       <div className="board">
-        {initialBoard.map((row, i) => <Row key={i} stones={row} />)}
+        {initialBoard.map((row, rowIndex) =>
+          <Row key={rowIndex} stones={row} onStonePlaced={this.stonePlaced(rowIndex)} />
+        )}
       </div>
     );
   }
@@ -28,8 +52,8 @@ var Row = React.createClass({
   render: function() {
     return (
       <div className="row">
-        {this.props.stones.map((stone, i) =>
-          <Cell key={i} stone={stone} />
+        {this.props.stones.map((stone, cellIndex) =>
+          <Cell key={cellIndex} stone={stone} onStonePlaced={this.props.onStonePlaced(cellIndex)} />
         )}
       </div>
     )
@@ -39,7 +63,7 @@ var Row = React.createClass({
 var Cell = React.createClass({
   render: function() {
     return (
-      <div className="cell">
+      <div className="cell" onClick={this.props.onStonePlaced} >
         <Stone type={this.props.stone} />
       </div>
     )
@@ -53,7 +77,7 @@ var Stone = React.createClass({
 });
 
 ReactDOM.render(
-  <Board />,
+  <Board game={game} />,
   document.getElementById('container')
 );
 
