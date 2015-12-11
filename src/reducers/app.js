@@ -1,3 +1,5 @@
+import { constants } from 'actions/app';
+
 const initialGameState = {
   creatingGame: false,
   currentGame: {},
@@ -5,13 +7,15 @@ const initialGameState = {
 }
 
 const appReducer = (state = initialGameState, action) => {
+  const { CREATE_GAME, GAME_CREATED } = constants;
+
   switch (action.type) {
-    case 'CREATE_GAME':
+    case CREATE_GAME:
       return {
         ...state,
         creatingGame: true
       }
-    case 'GAME_CREATED':
+    case GAME_CREATED:
       return {
         ...state,
         creatingGame: false
