@@ -1,10 +1,9 @@
 import { combineReducers }    from 'redux';
 import { routerStateReducer } from 'redux-router';
-import contacts from './contacts';
-import filter from './filter';
+
+import appReducer from 'reducers/app';
 
 export default combineReducers({
-  contacts,
-  filter,
+  app: appReducer,
   router: routerStateReducer
 });

@@ -41,6 +41,7 @@ const GameList = React.createClass({
             </li>
           )}
         </ul>
+        <Link to='/games/new'>New Game</Link>
       </div>
     );
   }
