@@ -4,6 +4,8 @@ import { pushState } from 'redux-router';
 // const SERVER = 'http://5eb530ce.ngrok.com';
 const SERVER = 'http://localhost:3000';
 
+const POLLING_INTERVAL = 1000;
+
 const constants = createConstants(
   'CREATE_GAME',
   'GAME_CREATED',
@@ -38,7 +40,7 @@ const pollForGame = (gameId, dispatch) => {
 
 const startPolling = (gameId) => (
   (dispatch) => {
-    let pollingId = setInterval(() => pollForGame(gameId, dispatch), 100);
+    let pollingId = setInterval(() => pollForGame(gameId, dispatch), POLLING_INTERVAL);
     dispatch({
       type: constants.START_POLLING,
       payload: { pollingId }
