@@ -6,9 +6,13 @@ const initialGameState = {
 
 const appReducer = (state = initialGameState, action) => {
   if (action.type === 'CREATE_GAME') {
-    console.log('would create game');
-    return state;
+    return {
+      ...state,
+      creatingGame: true
+    }
   } else {
     return state;
   }
 }
+
+export default appReducer;

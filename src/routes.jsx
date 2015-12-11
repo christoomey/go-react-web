@@ -4,7 +4,7 @@ import { IndexRoute, Route } from 'react-router';
 import Layout from 'components/Layout';
 import GameList from 'components/GameList';
 import Game from 'components/Game';
-import NewGame from 'components/NewGame';
+import NewGame from 'containers/NewGame';
 
 export default (
   <Route path='/' component={Layout}>
