@@ -10,7 +10,6 @@ export default React.createClass({
   render: function() {
     return (
       <div className='app'>
-        <p>I AM THE LAYOUT</p>
         {this.props.children}
       </div>
     );

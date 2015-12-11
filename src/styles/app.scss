@@ -11,17 +11,12 @@
 }
 
 .cell {
-  width: 20px;
-  height: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .stone {
-  width: 10px;
-  height: 10px;
-  border-radius: 6px;
   border: 1px solid black;
 }
 
