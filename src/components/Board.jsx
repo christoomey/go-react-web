@@ -12,31 +12,20 @@ const Board = React.createClass({
         })
       )
     ),
-    pending: React.PropTypes.bool,
     stonePlaced: React.PropTypes.func
   },
 
-  boardOrPending: function() {
-    const { pending, board, stonePlaced } = this.props;
+  render: function() {
+    const { board, stonePlaced } = this.props;
 
-    if (pending) {
-      return <p>Waiting for game data</p>;
-    } else {
-      return (
-        board.map((row, rowIndex) =>
+    return (
+      <div className='board'>
+        {board.map((row, rowIndex) =>
           <Row
             key={rowIndex}
             stones={row}
             onStonePlaced={stonePlaced(rowIndex)} />
-        )
-      );
-    }
-  },
-
-  render: function() {
-    return (
-      <div className='board'>
-        {this.boardOrPending()}
+        )}
       </div>
     );
   }

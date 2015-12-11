@@ -1,24 +1,17 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+import { actions } from 'actions/app';
 
 import Board from 'components/board';
-
-const EMPTY = 'EMPTY';
-const WHITE = 'WHITE';
-const BLACK = 'BLACK';
-
-const board = [
-  [{ pending: false, stone: EMPTY}, { pending: false, stone: EMPTY}, { pending: false, stone: WHITE}, { pending: false, stone: EMPTY }],
-  [{ pending: false, stone: WHITE}, { pending: false, stone: EMPTY}, { pending: false, stone: EMPTY}, { pending: false, stone: EMPTY }],
-  [{ pending: false, stone: EMPTY}, { pending: false, stone: BLACK}, { pending: false, stone: BLACK}, { pending: false, stone: EMPTY }],
-  [{ pending: false, stone: EMPTY}, { pending: true, stone: WHITE}, { pending: false, stone: EMPTY}, { pending: false, stone: EMPTY }]
-];
 
 const stonePlaced = (rowIndex) => {
   /* eslint-disable no-console */
   return (cellIndex) => console.log('stone placed', rowIndex, cellIndex);
 };
 
-export default React.createClass({
+const Game = React.createClass({
   propTypes: {
     params: React.PropTypes.shape({
       gameId: React.PropTypes.string,
@@ -26,17 +19,49 @@ export default React.createClass({
     })
   },
 
+  componentDidMount: function() {
+    const { gameId, player } = this.props.params;
+    const { loadGame } = this.props;
+
+    loadGame(this.props.params.gameId);
+  },
+
+  boardOrLoading: function() {
+    const { loadingGame, currentGame } = this.props;
+
+    if (loadingGame) {
+      return <p>Loading</p>
+    } else {
+      return (
+        <Board
+          board={currentGame.board}
+          stonePlaced={stonePlaced} />
+      )
+    }
+  },
+
   render: function() {
     const { gameId, player } = this.props.params;
+    const { loadingGame, currentGame } = this.props;
 
     return (
       <div>
         <p>Game #{gameId} - Player: {player}</p>
-        <Board
-          board={board}
-          pending={false}
-          stonePlaced={stonePlaced} />
+        {this.boardOrLoading()}
       </div>
     );
   }
 });
+
+const mapStateToProps = (state) => ({
+  currentGame: state.app.currentGame,
+  loadingGame: state.app.loadingGame
+});
+
+const mapDispatchToProps = (dispatch) => (
+  bindActionCreators(actions, dispatch)
+);
+
+export default connect(mapStateToProps, mapDispatchToProps)(
+  Game
+);

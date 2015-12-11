@@ -2,7 +2,7 @@ import React from 'react';
 
 import Stone from 'components/stone';
 
-const cellSize = 100;
+const cellSize = 30;
 const sizeStyle = `${cellSize}px`;
 
 const cellStyles = {
