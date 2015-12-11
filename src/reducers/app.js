@@ -5,13 +5,19 @@ const initialGameState = {
 }
 
 const appReducer = (state = initialGameState, action) => {
-  if (action.type === 'CREATE_GAME') {
-    return {
-      ...state,
-      creatingGame: true
-    }
-  } else {
-    return state;
+  switch (action.type) {
+    case 'CREATE_GAME':
+      return {
+        ...state,
+        creatingGame: true
+      }
+    case 'GAME_CREATED':
+      return {
+        ...state,
+        creatingGame: false
+      }
+    default:
+      return state
   }
 }
 
