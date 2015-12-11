@@ -34,7 +34,6 @@ export default React.createClass({
           <ReduxRouter>
             {routes}
           </ReduxRouter>
-          {this.renderDevTools()}
         </div>
       </Provider>
     );
