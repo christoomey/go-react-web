@@ -8,7 +8,8 @@ const constants = createConstants(
   'CREATE_GAME',
   'GAME_CREATED',
   'LOAD_GAME',
-  'GAME_LOADED'
+  'GAME_LOADED',
+  'PLACE_STONE'
 );
 
 const gameCreated = () => ({
@@ -19,6 +20,15 @@ const gameLoaded = (game) => ({
   type: constants.GAME_LOADED,
   payload: game
 })
+
+const placeStone = (rowIndex, cellIndex) => {
+  return (dispatch) => {
+    dispatch({
+      type: constants.PLACE_STONE,
+      payload: { rowIndex, cellIndex }
+    });
+  }
+}
 
 const loadGame = (gameId) => {
   return (dispatch) => {
@@ -58,7 +68,8 @@ const createGame = (player) => {
 
 const actions = {
   createGame,
-  loadGame
+  loadGame,
+  placeStone,
 };
 
 export default {

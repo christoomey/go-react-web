@@ -10,11 +10,11 @@ const Row = React.createClass({
         stone: React.PropTypes.string
       })
     ),
-    onStonePlaced: React.PropTypes.func
+    placeStone: React.PropTypes.func
   },
 
   render: function() {
-    const { stones, onStonePlaced } = this.props;
+    const { stones, placeStone } = this.props;
 
     return (
       <div className='row'>
@@ -22,7 +22,7 @@ const Row = React.createClass({
           <Cell
             key={cellIndex}
             stone={stone}
-            onStonePlaced={onStonePlaced(cellIndex)} />
+            placeStone={() => placeStone(cellIndex)} />
         )}
       </div>
     );

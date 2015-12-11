@@ -6,11 +6,6 @@ import { actions } from 'actions/app';
 
 import Board from 'components/board';
 
-const stonePlaced = (rowIndex) => {
-  /* eslint-disable no-console */
-  return (cellIndex) => console.log('stone placed', rowIndex, cellIndex);
-};
-
 const Game = React.createClass({
   propTypes: {
     params: React.PropTypes.shape({
@@ -27,7 +22,7 @@ const Game = React.createClass({
   },
 
   boardOrLoading: function() {
-    const { loadingGame, currentGame } = this.props;
+    const { loadingGame, currentGame, placeStone } = this.props;
 
     if (loadingGame) {
       return <p>Loading</p>
@@ -35,7 +30,7 @@ const Game = React.createClass({
       return (
         <Board
           board={currentGame.board}
-          stonePlaced={stonePlaced} />
+          placeStone={placeStone} />
       )
     }
   },

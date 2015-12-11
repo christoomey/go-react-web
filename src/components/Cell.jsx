@@ -12,7 +12,7 @@ const cellStyles = {
 
 const Cell = React.createClass({
   propTypes: {
-    onStonePlaced: React.PropTypes.func,
+    placeStone: React.PropTypes.func,
     stone: React.PropTypes.shape({
       pending: React.PropTypes.bool,
       stone: React.PropTypes.string
@@ -20,12 +20,12 @@ const Cell = React.createClass({
   },
 
   render: function() {
-    const { onStonePlaced } = this.props;
+    const { placeStone } = this.props;
     const { stone, pending } = this.props.stone;
     const stoneSize = Math.round(cellSize / 2);
 
     return (
-      <div className='cell' onClick={onStonePlaced} style={cellStyles}>
+      <div className='cell' onClick={placeStone} style={cellStyles}>
         <Stone size={stoneSize} stone={stone} pending={pending} />
       </div>
     );
