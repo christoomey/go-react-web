@@ -6,7 +6,8 @@ const {
   GAME_CREATED,
   LOAD_GAME,
   GAME_LOADED,
-  PLACE_STONE
+  PLACE_STONE,
+  GAME_UPDATED
 } = constants;
 
 const initialGameState = {
@@ -15,6 +16,7 @@ const initialGameState = {
   currentGame: {
     board: [[]],
     playingAs: EMPTY,
+    currentPlayer: EMPTY
   },
   games: []
 }
@@ -85,6 +87,18 @@ const appReducer = (state = initialGameState, action) => {
         currentGame: {
           ...state.currentGame,
           board: optimisticBoard
+        }
+      }
+
+    case GAME_UPDATED:
+      const { updatedGame } = action.payload;
+      const updatedBoard = nonPendingBoard(updatedGame.board);
+      return {
+        ...state,
+        currentGame: {
+          ...state.currentGame,
+          ...updatedGame,
+          board: updatedBoard
         }
       }
 

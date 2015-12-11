@@ -21,12 +21,28 @@ const gameLoaded = (game) => ({
   payload: game
 })
 
-const placeStone = (rowIndex, cellIndex) => {
+const placeStone = (gameId, player, rowIndex, cellIndex) => {
   return (dispatch) => {
     dispatch({
       type: constants.PLACE_STONE,
       payload: { rowIndex, cellIndex }
     });
+
+    const action = { type: 'STONE_PLACED', rowIndex, cellIndex, player: player.toUpperCase() };
+    const endpoint = `${SERVER}/games/${gameId}/actions`;
+    console.log(action, endpoint);
+
+    fetch(endpoint, { method: 'POST', body: JSON.stringify(action) }).
+      then(resp => {
+        resp.json().then(game => {
+          dispatch({
+            type: constants.GAME_UPDATED,
+            payload: {
+              updatedGame: game.game
+            }
+          })
+        })
+      })
   }
 }
 

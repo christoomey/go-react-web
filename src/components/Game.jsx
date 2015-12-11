@@ -22,7 +22,11 @@ const Game = React.createClass({
   },
 
   boardOrLoading: function() {
+    const { gameId } = this.props.params;
     const { loadingGame, currentGame, placeStone } = this.props;
+    const placeForCurrentGame = (rowIndex, cellIndex) => {
+      placeStone(gameId, currentGame.playingAs, rowIndex, cellIndex)
+    }
 
     if (loadingGame) {
       return <p>Loading</p>
@@ -30,7 +34,7 @@ const Game = React.createClass({
       return (
         <Board
           board={currentGame.board}
-          placeStone={placeStone} />
+          placeStone={placeForCurrentGame} />
       )
     }
   },
@@ -42,6 +46,7 @@ const Game = React.createClass({
     return (
       <div>
         <p>Game #{gameId} - Playing as: <strong>{currentGame.playingAs}</strong></p>
+        <p><strong>{currentGame.currentPlayer}</strong> to move next</p>
         {this.boardOrLoading()}
       </div>
     );
