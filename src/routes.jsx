@@ -1,13 +1,18 @@
 import React from 'react';
-import { Route } from 'react-router';
+import { IndexRoute, Route } from 'react-router';
 
 import Layout from 'components/Layout';
+import Games from 'components/Games';
+import GameList from 'components/GameList';
 import Game from 'components/Game';
 import NewGame from 'components/NewGame';
 
 export default (
   <Route path='/' component={Layout}>
-    <Route path='/games/new' component={NewGame} />
-    <Route path='/games/:gameId/:player' component={Game} />
+    <Route path='/games' component={Games}>
+      <IndexRoute component={GameList} />
+      <Route path='new' component={NewGame} />
+      <Route path=':gameId/:player' component={Game} />
+    </Route>
   </Route>
 );
