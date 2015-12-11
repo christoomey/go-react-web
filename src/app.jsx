@@ -9,14 +9,6 @@ const STONE_PLACED = 'STONE_PLACED';
 const SERVER = "http://5eb530ce.ngrok.com"
 const gameId = 5;
 
-let router = (
-  <Router>
-    <Route path="/" component={Wrapper}>
-      <Route path="*" component={RootComp} />
-    </Route>
-  </Router>
-);
-
 const nonPendingBoard = (board) => {
   return board.map(row => {
       return row.map(stone => {
@@ -180,6 +172,14 @@ let Wrapper = React.createClass({
     )
   }
 });
+
+let router = (
+  <Router>
+    <Route path="/" component={Wrapper}>
+      <Route path="*" component={RootComp} />
+    </Route>
+  </Router>
+);
 
 ReactDOM.render(
   router,
