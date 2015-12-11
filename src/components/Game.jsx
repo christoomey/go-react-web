@@ -2,14 +2,15 @@ import React from 'react';
 
 import Board from 'components/board';
 
+const EMPTY = 'EMPTY';
 const WHITE = 'WHITE';
 const BLACK = 'BLACK';
 
 const board = [
-  [{ pending: false, stone: WHITE}, { pending: false, stone: BLACK}, { pending: false, stone: BLACK}, { pending: false, stone: WHITE }],
-  [{ pending: false, stone: WHITE}, { pending: false, stone: BLACK}, { pending: false, stone: BLACK}, { pending: false, stone: WHITE }],
-  [{ pending: false, stone: WHITE}, { pending: false, stone: WHITE}, { pending: false, stone: BLACK}, { pending: false, stone: WHITE }],
-  [{ pending: false, stone: WHITE}, { pending: true, stone: BLACK}, { pending: false, stone: WHITE}, { pending: false, stone: WHITE }]
+  [{ pending: false, stone: EMPTY}, { pending: false, stone: EMPTY}, { pending: false, stone: WHITE}, { pending: false, stone: EMPTY }],
+  [{ pending: false, stone: WHITE}, { pending: false, stone: EMPTY}, { pending: false, stone: EMPTY}, { pending: false, stone: EMPTY }],
+  [{ pending: false, stone: EMPTY}, { pending: false, stone: BLACK}, { pending: false, stone: BLACK}, { pending: false, stone: EMPTY }],
+  [{ pending: false, stone: EMPTY}, { pending: true, stone: WHITE}, { pending: false, stone: EMPTY}, { pending: false, stone: EMPTY }]
 ];
 
 const stonePlaced = (rowIndex) => {
