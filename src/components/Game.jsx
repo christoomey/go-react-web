@@ -18,7 +18,7 @@ const Game = React.createClass({
     const { gameId, player } = this.props.params;
     const { loadGame } = this.props;
 
-    loadGame(this.props.params.gameId);
+    loadGame(gameId, player);
   },
 
   boardOrLoading: function() {
@@ -36,12 +36,12 @@ const Game = React.createClass({
   },
 
   render: function() {
-    const { gameId, player } = this.props.params;
+    const { gameId } = this.props.params;
     const { loadingGame, currentGame } = this.props;
 
     return (
       <div>
-        <p>Game #{gameId} - Player: {player}</p>
+        <p>Game #{gameId} - Playing as: <strong>{currentGame.player}</strong></p>
         {this.boardOrLoading()}
       </div>
     );

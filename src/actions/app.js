@@ -30,9 +30,12 @@ const placeStone = (rowIndex, cellIndex) => {
   }
 }
 
-const loadGame = (gameId) => {
+const loadGame = (gameId, player) => {
   return (dispatch) => {
-    dispatch({ type: constants.LOAD_GAME });
+    dispatch({
+      type: constants.LOAD_GAME,
+      payload: { player }
+    });
 
     fetch(`${SERVER}/games/${gameId}`).then(resp => {
       resp.json().then(game => {

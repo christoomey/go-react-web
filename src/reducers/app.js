@@ -13,7 +13,8 @@ const initialGameState = {
   creatingGame: false,
   loadingGame: true,
   currentGame: {
-    board: [[]]
+    board: [[]],
+    player: EMPTY,
   },
   games: []
 }
@@ -50,7 +51,11 @@ const appReducer = (state = initialGameState, action) => {
     case LOAD_GAME:
       return {
         ...state,
-        loadingGame: true
+        loadingGame: true,
+        currentGame: {
+          ...state.currentGame,
+          player: action.payload.player
+        }
       }
 
     case GAME_LOADED:
@@ -61,7 +66,8 @@ const appReducer = (state = initialGameState, action) => {
         loadingGame: false,
         currentGame: {
           ...game,
-          board
+          board,
+          player: state.currentGame.player
         }
       }
 
