@@ -7,7 +7,8 @@ const {
   LOAD_GAME,
   GAME_LOADED,
   PLACE_STONE,
-  GAME_UPDATED
+  GAME_UPDATED,
+  START_POLLING
 } = constants;
 
 const initialGameState = {
@@ -100,6 +101,12 @@ const appReducer = (state = initialGameState, action) => {
           ...updatedGame,
           board: updatedBoard
         }
+      }
+
+    case START_POLLING:
+      return {
+        ...state,
+        pollingId: action.payload.pollingId
       }
 
     default:

@@ -9,7 +9,9 @@ const constants = createConstants(
   'GAME_CREATED',
   'LOAD_GAME',
   'GAME_LOADED',
-  'PLACE_STONE'
+  'PLACE_STONE',
+  'GAME_UPDATED',
+  'START_POLLING',
 );
 
 const gameCreated = () => ({
@@ -20,6 +22,29 @@ const gameLoaded = (game) => ({
   type: constants.GAME_LOADED,
   payload: game
 })
+
+const pollForGame = (gameId, dispatch) => {
+  fetch(`${SERVER}/games/${gameId}`).then(resp =>
+    resp.json().then(game => {
+      dispatch({
+        type: constants.GAME_UPDATED,
+        payload: {
+          updatedGame: game.game
+        }
+      })
+    })
+  )
+}
+
+const startPolling = (gameId) => (
+  (dispatch) => {
+    let pollingId = setInterval(() => pollForGame(gameId, dispatch), 100);
+    dispatch({
+      type: constants.START_POLLING,
+      payload: { pollingId }
+    })
+  }
+)
 
 const placeStone = (gameId, player, rowIndex, cellIndex) => {
   return (dispatch) => {
@@ -86,6 +111,7 @@ const actions = {
   createGame,
   loadGame,
   placeStone,
+  startPolling,
 };
 
 export default {

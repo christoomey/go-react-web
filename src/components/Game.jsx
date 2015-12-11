@@ -16,9 +16,10 @@ const Game = React.createClass({
 
   componentDidMount: function() {
     const { gameId, playingAs } = this.props.params;
-    const { loadGame } = this.props;
+    const { loadGame, startPolling } = this.props;
 
     loadGame(gameId, playingAs);
+    startPolling(gameId);
   },
 
   boardOrLoading: function() {
