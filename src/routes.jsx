@@ -10,6 +10,6 @@ export default (
   <Route path='/' component={Layout}>
     <Route path='/games' component={GameList} />
     <Route path='/games/new' component={NewGame} />
-    <Route path='/games/:gameId/:player' component={Game} />
+    <Route path='/games/:gameId/:playingAs' component={Game} />
   </Route>
 );

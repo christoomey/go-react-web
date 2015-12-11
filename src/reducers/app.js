@@ -14,7 +14,7 @@ const initialGameState = {
   loadingGame: true,
   currentGame: {
     board: [[]],
-    player: EMPTY,
+    playingAs: EMPTY,
   },
   games: []
 }
@@ -54,7 +54,7 @@ const appReducer = (state = initialGameState, action) => {
         loadingGame: true,
         currentGame: {
           ...state.currentGame,
-          player: action.payload.player
+          playingAs: action.payload.playingAs
         }
       }
 
@@ -67,7 +67,7 @@ const appReducer = (state = initialGameState, action) => {
         currentGame: {
           ...game,
           board,
-          player: state.currentGame.player
+          playingAs: state.currentGame.playingAs
         }
       }
 
@@ -76,7 +76,7 @@ const appReducer = (state = initialGameState, action) => {
       const currentBoard  = state.currentGame.board;
       const optimisticBoard = optimisticallyPlace(
         currentBoard,
-        state.currentGame.player,
+        state.currentGame.playingAs,
         rowIndex,
         cellIndex
       );

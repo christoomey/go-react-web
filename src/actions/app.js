@@ -30,11 +30,11 @@ const placeStone = (rowIndex, cellIndex) => {
   }
 }
 
-const loadGame = (gameId, player) => {
+const loadGame = (gameId, playingAs) => {
   return (dispatch) => {
     dispatch({
       type: constants.LOAD_GAME,
-      payload: { player }
+      payload: { playingAs }
     });
 
     fetch(`${SERVER}/games/${gameId}`).then(resp => {
@@ -49,18 +49,15 @@ const loadGame = (gameId, player) => {
   };
 };
 
-const createGame = (player) => {
+const createGame = (playingAs) => {
   return (dispatch) => {
-    dispatch({
-      type: constants.CREATE_GAME,
-      payload: player
-    });
+    dispatch({ type: constants.CREATE_GAME });
 
     fetch(`${SERVER}/games`, { method: 'POST' }).then(resp => {
       resp.json().then(newGame => {
         if (resp.ok) {
           dispatch(gameCreated());
-          dispatch(pushState(null, `/games/${newGame.id}/${player}`));
+          dispatch(pushState(null, `/games/${newGame.id}/${playingAs}`));
         } else {
           console.error("GAME FAILED TO CREATE");
         };

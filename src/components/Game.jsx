@@ -15,10 +15,10 @@ const Game = React.createClass({
   },
 
   componentDidMount: function() {
-    const { gameId, player } = this.props.params;
+    const { gameId, playingAs } = this.props.params;
     const { loadGame } = this.props;
 
-    loadGame(gameId, player);
+    loadGame(gameId, playingAs);
   },
 
   boardOrLoading: function() {
@@ -41,7 +41,7 @@ const Game = React.createClass({
 
     return (
       <div>
-        <p>Game #{gameId} - Playing as: <strong>{currentGame.player}</strong></p>
+        <p>Game #{gameId} - Playing as: <strong>{currentGame.playingAs}</strong></p>
         {this.boardOrLoading()}
       </div>
     );
