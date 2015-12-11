@@ -74,10 +74,9 @@ const appReducer = (state = initialGameState, action) => {
     case PLACE_STONE:
       const { rowIndex, cellIndex } = action.payload;
       const currentBoard  = state.currentGame.board;
-      const player = 'BLACK';
       const optimisticBoard = optimisticallyPlace(
         currentBoard,
-        player,
+        state.currentGame.player,
         rowIndex,
         cellIndex
       );
